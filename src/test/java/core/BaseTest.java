@@ -20,7 +20,7 @@ public class BaseTest {
     public void init(){
         setUp();
     }
-    
+
     @AfterEach
     public void tearDown(){
         Selenide.closeWebDriver();
