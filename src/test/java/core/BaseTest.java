@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 public class BaseTest {
 
     public void setUp(){
-        WebDriverManager.chromedriver().setup();
+        WebDriverManager.chromiumdriver().setup();
         Configuration.browser = "chrome";
         Configuration.webdriverLogsEnabled = true;
         Configuration.browserSize = "1920x1080";
