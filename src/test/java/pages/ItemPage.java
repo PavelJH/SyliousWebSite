@@ -44,14 +44,15 @@ public class ItemPage {
         assertTrue(successAddToCartText.isDisplayed());
     }
 
-    public void getNameItem(){
-        String nameItem = nameOfProductText.getText();
-        System.out.println(nameItem);
+    public String getNameItem(){
+        sleep(300);
+        return nameOfProductText.getText();
+
     }
 
-    public void getPrise(){
-        String price = priceText.getText();
-        System.out.println(price);
+    public String getPrise() {
+        sleep(300);
+        return priceText.getText();
     }
 
 

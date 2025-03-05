@@ -14,6 +14,7 @@ public class MainPage {
     private final SelenideElement amountCart = $x("//span[@class='d-none d-lg-block ps-1']");
     private final SelenideElement syliusButtonLogo = $x("//a[@class='d-inline-block py-lg-2']");
     private final SelenideElement userNameTextOnMainPage = $x("//span[normalize-space()]");
+    private final SelenideElement mainPageFullPriceCart = $x("(//span[@class='d-none d-lg-block ps-1'])[1]");
 
     // Метод для получения кнопки по названию категории
     private SelenideElement getCategoryButton(String categoryName) {
@@ -53,6 +54,10 @@ public class MainPage {
         selectCategory(category);
     }
 
+
+    public String getFullPriceCart(){
+        return mainPageFullPriceCart.getText();
+    }
 
 
 
