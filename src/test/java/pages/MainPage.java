@@ -11,6 +11,7 @@ public class MainPage {
     private final SelenideElement logInButton = $x("//a[@id='login-page-button']");
     private final SelenideElement registerButton = $x("//a[@id='register-page-button']");
     private final SelenideElement cartButton = $x("//button[@aria-label='cart button']");
+    private final SelenideElement cartViewAndEditButton = $x("//a[normalize-space()='View and edit cart']");
     private final SelenideElement amountCart = $x("//span[@class='d-none d-lg-block ps-1']");
     private final SelenideElement syliusButtonLogo = $x("//a[@class='d-inline-block py-lg-2']");
     private final SelenideElement userNameTextOnMainPage = $x("//span[normalize-space()]");
@@ -59,6 +60,18 @@ public class MainPage {
         return mainPageFullPriceCart.getText();
     }
 
+    public void clickLogo(){
+        syliusButtonLogo.click();
+    }
+
+    public void cleanAllItems(){
+        cartButton.click();
+        cartViewAndEditButton.click();
+        CartPage cartPage = new CartPage();
+        cartPage.deleteFirstItemInCart();
+
+
+    }
 
 
 

@@ -2,7 +2,8 @@ package pages;
 
 import com.codeborne.selenide.SelenideElement;
 
-import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Selenide.*;
 
 public class CheckOutItemsPage {
     private final SelenideElement firstNameField = $x("//input[@id='sylius_shop_checkout_address_billingAddress_firstName']");
@@ -27,29 +28,58 @@ public class CheckOutItemsPage {
     private final SelenideElement changeShippingMethodButton = $x("//a[normalize-space()='Change shipping method']");
 
     private final SelenideElement billingAddressInfo = $x("//div[@class='row']//div[1]//div[1]//div[2]");
-    private final SelenideElement shippingAddressInfo = $x("(//div[@class='row']//div[2]//div[1]//div[2]");
+    private final SelenideElement shippingAddressInfo = $x("//div[@class='row']//div[2]//div[1]//div[2]");
     private final SelenideElement paymentsInfo = $x("(//div[@class='card-body d-flex flex-column gap-2']//div[@class='me-auto'])[1]");
     private final SelenideElement shippingInfo = $x("(//div[@class='card-body d-flex flex-column gap-2']//div[@class='me-auto'])[2]");
     private final SelenideElement placeOrderButton = $x("//button[@id='confirmation-button']");
 
-    public void fillBillingAddress(String name,String lastName, String street, String country, String city, String postCodeNumber, String phoneNumber){
-        firstNameField.clear();
-        firstNameField.setValue(name);
-        lastNameField.clear();
-        lastNameField.setValue(lastName);
-        streetAddressField.clear();
-        streetAddressField.setValue(street);
-        countryList.click();
+    private final SelenideElement totalPriceText = $x("//div[@class='h5 text-end border-top pt-4 mt-3' and starts-with(normalize-space(), '$')]\n");
+
+    public void fillBillingAddress(String name, String lastName, String street, String country, String city, String postCodeNumber, String phoneNumber){
+        // Очищаем поле и ждём, пока оно станет пустым, затем устанавливаем значение
+        firstNameField.shouldBe(visible).clear();
+        sleep(200);
+        firstNameField.shouldHave(value("")).setValue(name);
+
+        lastNameField.shouldBe(visible).clear();
+        sleep(200);
+        lastNameField.shouldHave(value("")).setValue(lastName);
+
+        streetAddressField.shouldBe(visible).clear();
+        sleep(200);
+        streetAddressField.shouldHave(value("")).setValue(street);
+
+        // Выбор страны
+        countryList.shouldBe(visible).click();
         SelenideElement countrySelect = $x("//select[@id='sylius_shop_checkout_address_billingAddress_countryCode']/option[normalize-space()='" + country + "']");
-        countrySelect.click();
-        cityField.clear();
-        cityField.setValue(city);
-        postCodeField.clear();
-        postCodeField.setValue(postCodeNumber);
-        phoneNumberField.setValue(phoneNumber);
-        nextButton.scrollIntoView(true);
-        nextButton.click();
+        countrySelect.shouldBe(visible).click();
+
+        cityField.shouldBe(visible).clear();
+        sleep(200);
+        cityField.shouldHave(value("")).setValue(city);
+
+        postCodeField.shouldBe(visible).clear();
+        sleep(200);
+        postCodeField.shouldHave(value("")).setValue(postCodeNumber);
+
+        phoneNumberField.shouldBe(visible).clear();
+        sleep(200);
+        phoneNumberField.shouldHave(value("")).setValue(phoneNumber);
+
+        // Проверяем, что кнопка доступна, и прокручиваем её в видимую область через JavaScript
+        nextButton.shouldBe(visible, enabled);
+        sleep(500);
+        nextButton.shouldBe(visible, enabled).click();
     }
+
+    public String getFormattedBillingAddress(String firstName, String lastName, String phoneNumber, String streetAddress, String city, String postCode) {
+        return firstName + " " + lastName + "\n" +
+                phoneNumber + "\n" +
+                streetAddress + "\n" +
+                city + ", " + postCode + "\n" +
+                "GERMANY";
+    }
+
 
     public void shippingShipment(){
         dhlExpressCheckBox.click();
@@ -75,6 +105,10 @@ public class CheckOutItemsPage {
 
     public String getShippingSummary(){
         return shippingInfo.getText();
+    }
+
+    public String getTotalPrice(){
+        return totalPriceText.getText();
     }
 
 

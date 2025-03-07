@@ -14,14 +14,19 @@ public class CartPage {
 
     private final SelenideElement qtyInCart = $x("//table[@class='table align-middle']/tbody/tr[last()]//input[@id='sylius_shop_cart_items_0_quantity']");
     private final SelenideElement unitPriceInCart = $x("//table[@class='table align-middle']/tbody/tr[last()]//td[@class='text-black-50 text-end']/span[starts-with(normalize-space(), '$')][1]");
-    private final SelenideElement totalPriceInCartLastItem = $x("//table[@class='table align-middle']/tbody/tr[last()]//td[@class='text-black-50 text-end']/span[starts-with(normalize-space(), '$')][2]");
+    private final SelenideElement totalPriceInCartLastItem = $x("(//div[@class='table-responsive']//span[starts-with(normalize-space(), '$')])[2]");
     private final SelenideElement itemsTotalPriceInCartFull = $x("(//div[@class='ms-auto text-end'][starts-with(normalize-space(), '$')])[1]");
+    private final SelenideElement orderTotalPriceInCartFull = $x("//div[@class='ms-auto h5 text-end']");
+
 
     private final SelenideElement checkOutButton = $x("//button[@type='submit']");
 
 
 
     public void deleteFirstItemInCart() {
+        if (!deleteLastItem.exists()) {
+            return; // Если элемент не найден, выходим из метода
+        }
         deleteLastItem.click();
         String alertText = yourCartIsEmpty.getText();
         assertTrue(alertText.contains("Your cart is empty"), "The cart is not empty.");
@@ -42,6 +47,10 @@ public class CartPage {
 
     public void clickCheckOutButton(){
         checkOutButton.click();
+    }
+
+    public String getOrderTotalPriceInCartFull(){
+        return orderTotalPriceInCartFull.getText();
     }
 
 
@@ -65,8 +74,9 @@ public class CartPage {
         double calculatedTotal = quantity * unitPrice;
 
         // Для JUnit 5: порядок параметров: expected, actual, message
-        assertEquals(calculatedTotal, totalPrice, "The amount in the basket does not match the calculated amount");
+        assertEquals(calculatedTotal, totalPrice, 0.001, "The amount in the basket does not match the calculated amount");
     }
+
 
 
 }

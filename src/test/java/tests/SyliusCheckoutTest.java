@@ -3,15 +3,12 @@ package tests;
 import com.codeborne.selenide.Selenide;
 import com.github.javafaker.Faker;
 import core.BaseTest;
-import dev.failsafe.internal.util.Assert;
-import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.Test;
 import pages.*;
 
 import java.util.List;
 
 import static com.codeborne.selenide.Selenide.$x;
-import static com.codeborne.selenide.Selenide.sleep;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -66,6 +63,9 @@ public class SyliusCheckoutTest extends BaseTest {
         AuthPage authPage = new AuthPage();
         authPage.auth();
         mainPage.checkUserNameOnPage();
+        CartPage cartPage = new CartPage();
+        mainPage.cleanAllItems();
+        mainPage.clickLogo();
         mainPage.clickTShirts(T_SHIRTS_JEANS_MEN);
         ItemsPage itemsPage = new ItemsPage();
         itemsPage.firstItemOnPageClick();
@@ -73,7 +73,6 @@ public class SyliusCheckoutTest extends BaseTest {
         itemPage.selectSize("XL");
         itemPage.putQuantity("3");
         itemPage.clickAddToCart();
-        CartPage cartPage = new CartPage();
         cartPage.deleteFirstItemInCart();
 
 
@@ -82,7 +81,7 @@ public class SyliusCheckoutTest extends BaseTest {
     @Test
     public void buyItem(){
         Selenide.open(URL);
-       MainPage mainPage = new MainPage();
+        MainPage mainPage = new MainPage();
         mainPage.clickTShirts(T_SHIRTS_JEANS_MEN);
         ItemsPage itemsPage = new ItemsPage();
         itemsPage.firstItemOnPageClick();
@@ -101,6 +100,9 @@ public class SyliusCheckoutTest extends BaseTest {
         AuthPage authPage = new AuthPage();
         authPage.auth();
         mainPage.checkUserNameOnPage();
+        CartPage cartPage = new CartPage();
+        mainPage.cleanAllItems();
+        mainPage.clickLogo();
         mainPage.clickTShirts(T_SHIRTS_JEANS_MEN);
         ItemsPage itemsPage = new ItemsPage();
         itemsPage.firstItemOnPageClick();
@@ -108,7 +110,6 @@ public class SyliusCheckoutTest extends BaseTest {
         itemPage.selectSize("XL");
         itemPage.putQuantity(QUANTITY);
         itemPage.clickAddToCart();
-        CartPage cartPage = new CartPage();
         cartPage.checkAmountPrice();
     }
 
@@ -120,6 +121,9 @@ public class SyliusCheckoutTest extends BaseTest {
         AuthPage authPage = new AuthPage();
         authPage.auth();
         mainPage.checkUserNameOnPage();
+        CartPage cartPage = new CartPage();
+        mainPage.cleanAllItems();
+        mainPage.clickLogo();
         mainPage.clickTShirts(T_SHIRTS_JEANS_MEN);
         ItemsPage itemsPage = new ItemsPage();
         itemsPage.firstItemOnPageClick();
@@ -127,7 +131,6 @@ public class SyliusCheckoutTest extends BaseTest {
         itemPage.selectSize("XL");
         String itemPagePrice = itemPage.getPrise(); // сохраняем цену товара
         itemPage.clickAddToCart();
-        CartPage cartPage = new CartPage();
         String itemCartPriceUnit = cartPage.getUnitPrice();
         assertEquals(itemCartPriceUnit, itemPagePrice, "The lists are not the same");
     }
@@ -140,6 +143,9 @@ public class SyliusCheckoutTest extends BaseTest {
         AuthPage authPage = new AuthPage();
         authPage.auth();
         mainPage.checkUserNameOnPage();
+        CartPage cartPage = new CartPage();
+        mainPage.cleanAllItems();
+        mainPage.clickLogo();
         mainPage.clickTShirts(T_SHIRTS_JEANS_MEN);
         ItemsPage itemsPage = new ItemsPage();
         itemsPage.firstItemOnPageClick();
@@ -147,7 +153,7 @@ public class SyliusCheckoutTest extends BaseTest {
         itemPage.putQuantity(QUANTITY);
         itemPage.selectSize("XL");
         itemPage.clickAddToCart();
-        CartPage cartPage = new CartPage();
+
         assertEquals(cartPage.getQtyNumber(), QUANTITY, "The lists are not the same");
     }
 
@@ -159,6 +165,9 @@ public class SyliusCheckoutTest extends BaseTest {
         AuthPage authPage = new AuthPage();
         authPage.auth();
         mainPage.checkUserNameOnPage();
+        CartPage cartPage = new CartPage();
+        mainPage.cleanAllItems();
+        mainPage.clickLogo();
         mainPage.clickTShirts(T_SHIRTS_JEANS_MEN);
         ItemsPage itemsPage = new ItemsPage();
         itemsPage.firstItemOnPageClick();
@@ -166,7 +175,6 @@ public class SyliusCheckoutTest extends BaseTest {
         itemPage.selectSize("XL");
         itemPage.putQuantity(QUANTITY);
         itemPage.clickAddToCart();
-        CartPage cartPage = new CartPage();
         String totalPricePageCart = cartPage.getTotalPriceFull();
         String totalPriceMainPage = mainPage.getFullPriceCart();
         assertTrue(totalPriceMainPage.contains(totalPricePageCart),
@@ -182,6 +190,9 @@ public class SyliusCheckoutTest extends BaseTest {
         AuthPage authPage = new AuthPage();
         authPage.auth();
         mainPage.checkUserNameOnPage();
+        CartPage cartPage = new CartPage();
+        mainPage.cleanAllItems();
+        mainPage.clickLogo();
         mainPage.clickTShirts(T_SHIRTS_JEANS_MEN);
         ItemsPage itemsPage = new ItemsPage();
         itemsPage.firstItemOnPageClick();
@@ -189,28 +200,49 @@ public class SyliusCheckoutTest extends BaseTest {
         itemPage.selectSize("XL");
         itemPage.putQuantity(QUANTITY);
         itemPage.clickAddToCart();
-        CartPage cartPage = new CartPage();
+        String getOrderTotalPRice = cartPage.getOrderTotalPriceInCartFull();
         cartPage.clickCheckOutButton();
         CheckOutItemsPage checkOutItemsPage = new CheckOutItemsPage();
-        checkOutItemsPage.fillBillingAddress(
-                faker.name().firstName(),        // firstName
-                faker.name().lastName(),         // lastName
-                faker.address().streetAddress(), // street
-                "Germany",                       // country (фиксированное значение)
-                faker.address().city(),          // city
-                faker.address().zipCode(),       // postCodeNumber
-                faker.phoneNumber().cellPhone()  // phoneNumber
-        );
+
+        // Генерация данных с Faker
+        String firstName = faker.name().firstName();
+        String lastName = faker.name().lastName();
+        String street = faker.address().streetAddress();
+        String city = faker.address().city();
+        String postCode = faker.address().zipCode();
+        String phoneNumber = faker.phoneNumber().cellPhone();
+
+        // Заполнение формы
+        checkOutItemsPage.fillBillingAddress(firstName, lastName, street, "Germany", city, postCode, phoneNumber);
         checkOutItemsPage.shippingShipment();
         checkOutItemsPage.payment();
+
+        // Формирование итоговой строки
+        String formattedBillingAddress = checkOutItemsPage.getFormattedBillingAddress(firstName, lastName, phoneNumber, street, city, postCode);
+//        System.out.println(formattedBillingAddress);
+
         String getBillingAddressSummary = checkOutItemsPage.getBillingAddressSummary();
         String getShippingAddressSummery = checkOutItemsPage.getShippingAddressSummary();
         String getPaymentsSummery = checkOutItemsPage.getPaymentsSummary();
-        String getShipmentSummery = checkOutItemsPage.getShippingAddressSummary();
-        System.out.println(getBillingAddressSummary);
-        System.out.println(getShippingAddressSummery);
-        System.out.println(getPaymentsSummery);
-        System.out.println(getShipmentSummery);
+        String getShipmentSummery = checkOutItemsPage.getShippingSummary();
+
+        String getTotalPrice = checkOutItemsPage.getTotalPrice();
+
+//        System.out.println("its Billing Address: " + getBillingAddressSummary);
+//        System.out.println("its Shipping Address: " + getShippingAddressSummery);
+//        System.out.println("its Payment: " + getPaymentsSummery);
+//        System.out.println("its Shipment: " + getShipmentSummery);
+
+        assertEquals(formattedBillingAddress.trim(), getBillingAddressSummary.trim());
+        assertEquals(getShippingAddressSummery.trim(), getBillingAddressSummary.trim());
+        assertEquals(formattedBillingAddress.trim(), getShippingAddressSummery.trim());
+
+        assertEquals("Cash on delivery", getPaymentsSummery);
+        assertEquals("FedEx", getShipmentSummery);
+        assertEquals(getOrderTotalPRice, getTotalPrice);
+
+//        System.out.println(getOrderTotalPRice);
+//        System.out.println(getTotalPrice);
 
 
 
