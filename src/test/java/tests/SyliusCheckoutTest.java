@@ -1,6 +1,7 @@
 package tests;
 
 import com.codeborne.selenide.Selenide;
+import com.github.javafaker.Faker;
 import core.BaseTest;
 import dev.failsafe.internal.util.Assert;
 import org.checkerframework.checker.units.qual.C;
@@ -174,17 +175,44 @@ public class SyliusCheckoutTest extends BaseTest {
 
     @Test
     public void buyAndCheckOrder(){
+        Faker faker = new Faker();
         Selenide.open(URL);
         MainPage mainPage = new MainPage();
+        mainPage.goToLogInPage();
+        AuthPage authPage = new AuthPage();
+        authPage.auth();
+        mainPage.checkUserNameOnPage();
         mainPage.clickTShirts(T_SHIRTS_JEANS_MEN);
         ItemsPage itemsPage = new ItemsPage();
         itemsPage.firstItemOnPageClick();
         ItemPage itemPage = new ItemPage();
-        itemPage.putQuantity(QUANTITY);
         itemPage.selectSize("XL");
+        itemPage.putQuantity(QUANTITY);
+        itemPage.clickAddToCart();
         CartPage cartPage = new CartPage();
-        String totalPricePageCart = cartPage.getTotalPriceFull();
         cartPage.clickCheckOutButton();
+        CheckOutItemsPage checkOutItemsPage = new CheckOutItemsPage();
+        checkOutItemsPage.fillBillingAddress(
+                faker.name().firstName(),        // firstName
+                faker.name().lastName(),         // lastName
+                faker.address().streetAddress(), // street
+                "Germany",                       // country (фиксированное значение)
+                faker.address().city(),          // city
+                faker.address().zipCode(),       // postCodeNumber
+                faker.phoneNumber().cellPhone()  // phoneNumber
+        );
+        checkOutItemsPage.shippingShipment();
+        checkOutItemsPage.payment();
+        String getBillingAddressSummary = checkOutItemsPage.getBillingAddressSummary();
+        String getShippingAddressSummery = checkOutItemsPage.getShippingAddressSummary();
+        String getPaymentsSummery = checkOutItemsPage.getPaymentsSummary();
+        String getShipmentSummery = checkOutItemsPage.getShippingAddressSummary();
+        System.out.println(getBillingAddressSummary);
+        System.out.println(getShippingAddressSummery);
+        System.out.println(getPaymentsSummery);
+        System.out.println(getShipmentSummery);
+
+
 
     }
 
