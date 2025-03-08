@@ -1,6 +1,7 @@
 plugins {
     id 'java'
-//    id("org.gradle.test-retry") version "1.6.2"
+    id("org.gradle.test-retry") version "1.6.2"
+    id 'io.qameta.allure' version '2.11.2'
 
 }
 
@@ -23,18 +24,36 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
     testImplementation 'io.rest-assured:rest-assured:5.3.0'
-    testImplementation 'io.qameta.allure:allure-junit5:2.21.0'
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
     implementation 'com.github.javafaker:javafaker:1.0.2'
+
+    testImplementation 'com.typesafe:config:1.4.2'
+
+    // Allure для JUnit 5
+    testImplementation group: 'io.qameta.allure', name: 'allure-junit5', version: '2.28.1'
+    testImplementation group: 'io.qameta.allure', name: 'allure-commandline', version: '2.29.0', ext: 'pom'
+    testImplementation group: 'io.qameta.allure', name: 'allure-assertj', version: '2.28.1'
+    testImplementation group: 'io.qameta.allure', name: 'allure-rest-assured', version: '2.28.1'
+    testImplementation group: 'io.qameta.allure', name: 'allure-java-commons', version: '2.28.1'
+    testImplementation group: 'io.qameta.allure', name: 'allure-selenide', version: '2.28.1'
+
+
 
 }
 
 
 test {
     useJUnitPlatform()
-//    retry {
-//        maxRetries.set(2)
-//    }
+    retry {
+        maxRetries.set(2)
+    }
 }
+allure {
+    // Версия Allure Commandline, которую будет использовать плагин
+    version = '2.29.0'
+}
+
+// Если хотите, чтобы при выполнении gradle check генерировался Allure Report:
+check.dependsOn allureReport
 

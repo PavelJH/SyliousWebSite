@@ -72,17 +72,17 @@ public class CheckOutItemsPage {
         nextButton.shouldBe(visible, enabled).click();
     }
 
-    public String getFormattedBillingAddress(String firstName, String lastName, String phoneNumber, String streetAddress, String city, String postCode) {
+    public String getFormattedBillingAddress(String firstName, String lastName, String phoneNumber, String streetAddress, String city, String postCode, String country) {
         return firstName + " " + lastName + "\n" +
                 phoneNumber + "\n" +
                 streetAddress + "\n" +
                 city + ", " + postCode + "\n" +
-                "GERMANY";
+                country.toUpperCase();
     }
 
 
     public void shippingShipment(){
-        dhlExpressCheckBox.click();
+        upsCheckBox.click();
         nextButton.click();
     }
 

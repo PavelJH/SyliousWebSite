@@ -47,7 +47,6 @@ public class ItemPage {
     public String getNameItem(){
         sleep(300);
         return nameOfProductText.getText();
-
     }
 
     public String getPrise() {
