@@ -1,6 +1,7 @@
 package pages;
 
 import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.By;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
@@ -111,5 +112,29 @@ public class CheckOutItemsPage {
         return totalPriceText.getText();
     }
 
+    public void selectShippingMethod(String shippingMethod) {
+        // Формируем xpath, который ищет div с классом form-check, в котором label содержит указанный текст.
+        String xpath = "//div[contains(@class,'form-check')]" +
+                "[normalize-space(label)='" + shippingMethod + "']" +
+                "/input";
+
+        SelenideElement radioButton = $(By.xpath(xpath));
+        radioButton.click();
+
+    }
+    public String getShippingChoseTest() {
+        // Находим выбранный radio input (с атрибутом checked)
+        SelenideElement selectedRadio = $("input.form-check-input:checked");
+        // Получаем его id, чтобы найти связанный label
+        String radioId = selectedRadio.getAttribute("id");
+        // Находим label, у которого атрибут for соответствует id
+        SelenideElement labelElement = $(By.xpath("//label[@for='" + radioId + "']"));
+        // Возвращаем текст label
+        return labelElement.getText();
+    }
+
+    public void clickNextButton(){
+        nextButton.click();
+    }
 
 }

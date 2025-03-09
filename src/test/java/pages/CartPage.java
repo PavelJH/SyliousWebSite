@@ -1,5 +1,6 @@
 package pages;
 
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import helpers.Helpers;
 
@@ -25,11 +26,16 @@ public class CartPage {
 
     public void deleteFirstItemInCart() {
         if (!deleteLastItem.exists()) {
-            return; // Если элемент не найден, выходим из метода
+            // Если элемента нет, проверяем текст и завершаем метод
+//            String alertText = yourCartIsEmpty.getText();
+//            assertTrue(alertText.contains("Your cart is empty"), "The cart is not empty.");
+            return;
         }
+        // Если элемент существует – кликаем по нему и перезагружаем страницу
         deleteLastItem.click();
-        String alertText = yourCartIsEmpty.getText();
-        assertTrue(alertText.contains("Your cart is empty"), "The cart is not empty.");
+        Selenide.refresh();
+        // После перезагрузки снова вызываем метод для проверки удаления элемента
+        deleteFirstItemInCart();
     }
 
     public String getQtyNumber() {

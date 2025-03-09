@@ -132,4 +132,63 @@ public class Buy extends BaseTest {
 //        System.out.println(getTotalPrice);
 
     }
+
+    @Test
+    public void buyAndCheckOrderWithAnotherShipment(){
+        Faker faker = new Faker();
+        Selenide.open(URL);
+        MainPage mainPage = new MainPage();
+        mainPage.goToLogInPage();
+        AuthPage authPage = new AuthPage();
+        authPage.auth();
+        mainPage.checkUserNameOnPage();
+        CartPage cartPage = new CartPage();
+        mainPage.cleanAllItems();
+        mainPage.clickLogo();
+        mainPage.clickTShirts(T_SHIRTS_JEANS_MEN);
+        ItemsPage itemsPage = new ItemsPage();
+        itemsPage.firstItemOnPageClick();
+        ItemPage itemPage = new ItemPage();
+        itemPage.selectSize(SIZE_XL);
+        itemPage.putQuantity(QUANTITY_03);
+        itemPage.clickAddToCart();
+        String getOrderTotalPRice = cartPage.getOrderTotalPriceInCartFull();
+        cartPage.clickCheckOutButton();
+        CheckOutItemsPage checkOutItemsPage = new CheckOutItemsPage();
+
+        // Генерация данных с Faker
+        String firstName = faker.name().firstName();
+        String lastName = faker.name().lastName();
+        String street = faker.address().streetAddress();
+        String city = faker.address().city();
+        String postCode = faker.address().zipCode();
+        String phoneNumber = faker.phoneNumber().cellPhone();
+
+        // Заполнение формы
+        checkOutItemsPage.fillBillingAddress(firstName, lastName, street, COUNTRY_DE, city, postCode, phoneNumber);
+//        checkOutItemsPage.shippingShipment();
+        checkOutItemsPage.selectShippingMethod("FedEx");
+        String getShippingChoseTest = checkOutItemsPage.getShippingChoseTest();
+        checkOutItemsPage.clickNextButton();
+        checkOutItemsPage.selectShippingMethod("Cash on delivery");
+        checkOutItemsPage.clickNextButton();
+//        checkOutItemsPage.payment();
+
+        String formattedBillingAddress = checkOutItemsPage.getFormattedBillingAddress(firstName, lastName, phoneNumber, street, city, postCode, COUNTRY_DE);
+
+        String getBillingAddressSummary = checkOutItemsPage.getBillingAddressSummary();
+        String getShippingAddressSummery = checkOutItemsPage.getShippingAddressSummary();
+        String getPaymentsSummery = checkOutItemsPage.getPaymentsSummary();
+        String getShipmentSummery = checkOutItemsPage.getShippingSummary();
+
+        String getTotalPrice = checkOutItemsPage.getTotalPrice();
+
+        assertEquals(formattedBillingAddress.trim(), getBillingAddressSummary.trim());
+        assertEquals(getShippingAddressSummery.trim(), getBillingAddressSummary.trim());
+        assertEquals(formattedBillingAddress.trim(), getShippingAddressSummery.trim());
+
+        assertEquals("Cash on delivery", getPaymentsSummery);
+        assertEquals(getShippingChoseTest, getShipmentSummery);
+        assertEquals(getOrderTotalPRice, getTotalPrice);
+    }
 }
