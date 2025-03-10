@@ -167,7 +167,7 @@ public class Buy extends BaseTest {
         // Заполнение формы
         checkOutItemsPage.fillBillingAddress(firstName, lastName, street, COUNTRY_DE, city, postCode, phoneNumber);
 //        checkOutItemsPage.shippingShipment();
-        checkOutItemsPage.selectShippingMethod("FedEx");
+        checkOutItemsPage.selectShippingMethod("UPS");
         String getShippingChoseTest = checkOutItemsPage.getShippingChoseTest();
         checkOutItemsPage.clickNextButton();
         checkOutItemsPage.selectShippingMethod("Cash on delivery");

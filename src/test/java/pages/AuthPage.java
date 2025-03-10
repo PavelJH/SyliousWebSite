@@ -13,6 +13,7 @@ public class AuthPage {
     private final SelenideElement registerHereButton = $x("//a[@id='register-here-button']");
     private final SelenideElement userNameText = $x("//strong[contains(text(), '@')]");
     private final SelenideElement passwordText = $x("//p/strong[preceding-sibling::text()[contains(., 'Password:')]]");
+    private final SelenideElement errorAlertLogIn = $x("//div[@class='alert alert-danger']");
 
 
     public void auth(){
@@ -22,6 +23,20 @@ public class AuthPage {
         passwordField.setValue(password);
         logInButton.click();
         System.out.println("For now, UserName is: "+"'"+ name +"'"+ " and Password is: " + "'"+ password+ "'");
+    }
+
+    public void authWithData(String userName, String password){
+        userNameField.setValue(userName);
+        passwordField.setValue(password);
+        logInButton.click();
+    }
+
+    public String errorAlertLogIn(){
+        return errorAlertLogIn.getText();
+    }
+
+    public void clickRegisterHere(){
+        registerHereButton.click();
     }
 
 

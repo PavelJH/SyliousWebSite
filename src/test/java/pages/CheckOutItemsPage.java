@@ -66,6 +66,7 @@ public class CheckOutItemsPage {
         phoneNumberField.shouldBe(visible).clear();
         sleep(200);
         phoneNumberField.shouldHave(value("")).setValue(phoneNumber);
+        nextButton.scrollIntoView(true);
 
         // Проверяем, что кнопка доступна, и прокручиваем её в видимую область через JavaScript
         nextButton.shouldBe(visible, enabled);
