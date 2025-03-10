@@ -1,8 +1,13 @@
 package helpers;
 
+import com.codeborne.selenide.SelenideElement;
+
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
+
+import static com.codeborne.selenide.Selenide.executeJavaScript;
+import static com.codeborne.selenide.Selenide.sleep;
 
 public class Helpers {
     /**
@@ -23,4 +28,5 @@ public class Helpers {
         }
 
     }
+
 }

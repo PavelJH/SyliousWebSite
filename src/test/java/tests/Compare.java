@@ -103,4 +103,26 @@ public class Compare extends BaseTest {
         assertTrue(totalPriceMainPage.contains(totalPriceMainPage),
                 "Total price in cart does not contain the expected main page price");
     }
+
+    @Test
+    public void searchField(){
+        Selenide.open(URL);
+        MainPage mainPage = new MainPage();
+        mainPage.clickCaps(CAPS_WITH_POMPONS);
+        ItemsPage itemsPage = new ItemsPage();
+        itemsPage.searchField("Radiant Reflection Cap");
+        itemsPage.searchItemOnPage("Radiant Reflection Cap");
+        ItemPage itemPage = new ItemPage();
+        String nameItem = itemPage.getNameItem();
+        assertEquals("Radiant Reflection Cap", nameItem, "The products have different names.");
+    }
+
+    @Test
+    public void checkSocialNetworkLinks(){
+        Selenide.open(URL);
+        MainPage mainPage = new MainPage();
+        mainPage.verifyAllSocialLinks();
+    }
+
+
 }

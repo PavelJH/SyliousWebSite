@@ -23,6 +23,17 @@ public class ItemsPage {
     private final SelenideElement firstItemOnPage = $x("//img[@alt='Product Stellar Drift T-Shirt Image']");
 
 
+    public void searchField(String nameItem){
+        valueSearchField.setValue(nameItem);
+        searchButton.click();
+    }
+
+    public void searchItemOnPage(String itemName){
+        String productName = itemName;
+        String xpath = "//div[@class='products-grid']//a[@class='link-reset']//div[normalize-space(text())='" + productName + "']";
+        $x(xpath).click();
+    }
+
 
 
     public void selectItemLimit(String limit) {
@@ -58,6 +69,7 @@ public class ItemsPage {
             String name = itemPage.nameOfProductText.getText();
             String price = itemPage.priceText.getText();
 
+            System.out.println("its what I look " + name);
             // Форматируем строку и добавляем ее в список
             String itemInfo = "Name: " + name + ", Price: " + price;
             itemPagePriceAndName.add(itemInfo);
