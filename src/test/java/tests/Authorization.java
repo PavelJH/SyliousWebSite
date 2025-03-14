@@ -12,7 +12,8 @@ import pages.RegistrationPage;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static readConfig.ConfigProvider.URL;
 
-public class Authorization extends BaseTest {
+public class
+Authorization extends BaseTest {
 
     @Test
     @Tag("positive")
